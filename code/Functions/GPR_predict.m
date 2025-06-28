@@ -1,0 +1,62 @@
+function [Y_predict, sigma] = GPR_predict(X_train, Y_train, X_test, cov_mat_in, s_opt, indicator)
+num_train = size(Y_train,1);
+num_test = size(X_test,1);
+cov_mat = zeros(num_train + num_test, num_train + num_test);
+X_total = [X_train; X_test];
+
+
+if(indicator == 1)
+    for i = 1:num_train 
+        for j = num_train + 1:num_train + num_test
+            cov_mat(i,j) = exp((-norm((X_total(i,:) - X_total(j,:)))^2)*s_opt);
+        end
+    end
+    for i = num_train + 1:num_train + num_test
+        for j = num_train + 1:num_train + num_test
+            cov_mat(i,j) = exp((-norm((X_total(i,:) - X_total(j,:)))^2)*s_opt);
+        end
+    end
+    cov_mat(1:num_train, 1:num_train) = cov_mat_in;
+    cov_mat(num_train + 1: end, 1:num_train) = cov_mat(1:num_train, num_train + 1: end)';
+end
+
+
+
+if(indicator == 2)
+    for i = 1:num_train 
+        for j = num_train + 1:num_train + num_test
+            cov_mat(i,j) = X_total(i,:) * X_total(j,:)';
+        end
+    end
+    for i = num_train + 1:num_train + num_test
+        for j = num_train + 1:num_train + num_test
+            cov_mat(i,j) = X_total(i,:) * X_total(j,:)';
+        end
+    end
+    cov_mat(1:num_train, 1:num_train) = cov_mat_in;
+    cov_mat(num_train + 1: end, 1:num_train) = cov_mat(1:num_train, num_train + 1: end)';
+end
+
+  
+if(indicator == 3)
+    for i = 1:num_train 
+        for j = num_train + 1:num_train + num_test
+        cov_mat(i,j) = double(isequal(X_total(i,:), X_total(j,:)));
+        end
+    end
+    for i = num_train + 1:num_train + num_test
+        for j = num_train + 1:num_train + num_test
+        cov_mat(i,j) = double(isequal(X_total(i,:), X_total(j,:)));
+        end
+    end
+    cov_mat(1:num_train, 1:num_train) = cov_mat_in;
+    cov_mat(num_train + 1: end, 1:num_train) = cov_mat(1:num_train, num_train + 1: end)';
+end
+ 
+
+cov_mat = cov_mat + .01*eye(num_train + num_test);
+sigma11 = cov_mat(1:num_train, 1:num_train);
+sigma21 = cov_mat(num_train + 1:end, 1:num_train);
+sigma22 = cov_mat(num_train + 1:end, num_train + 1:end);
+Y_predict = sigma21 / (sigma11) * Y_train;
+sigma = sqrt(diag(sigma22 - sigma21 /(sigma11) * sigma21'));
