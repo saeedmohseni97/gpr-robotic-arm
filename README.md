@@ -46,9 +46,9 @@ GPR offers a principled way to estimate predictive uncertainty, which is a valua
 
 ```
 .
-├── code/                  # MATLAB code for GPR simulation
-├── report/                # PDF version of the full technical report
-├── plots/                 # Visualizations and figures
+├── code/                  # MATLAB code for GPR simulation.
+├── report/                # PDF version of the full technical report.
+├── plots/                 # Visualizations and figures.
 └── README.md              # You're here!
 ```
 
