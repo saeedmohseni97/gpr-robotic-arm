@@ -59,7 +59,7 @@ GPR offers a principled way to estimate predictive uncertainty, which is a valua
    git clone https://github.com/saeedmohseni97/gpr-robotic-arm.git
    cd gpr-robotic-arm
    ```
-2. To run the GPR simulation, execute the `main.m` file located in the `code/` folder
+2. To run the GPR simulation, execute the `main.m` file located in the `code/` folder.
 3. View the output plots in the `plots/` folder.
 
 ## 📈 Results Summary
